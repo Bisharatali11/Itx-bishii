@@ -132,7 +132,7 @@ if ([
      return api.sendMessage("GOOD MORNING 🌅🌄 امید کرتا ہوں ٹھیک ہونگے  اللہ پاک اپکی صبح کو بہتر بناۓ۔صبح کا اغاز درود شریف سے۔اَللّٰہُمَّ صَلِّ عَلٰی مُحَمَّدٍ وَّ عَلٰٓی اٰلِ مُحَمَّدٍ کَمَا صَلَّیْتَ عَلٰٓی اِبْرَاهِيْمَ وَعَلٰٓی اٰلِ اِبْرَاهِيْمَ اِنَّكَ حَمِيْدٌ مَّجِيْدٌ اَللّٰہُمَّ بَارِكْ عَلٰی مُحَمَّدٍ وَّ عَلٰٓی اٰلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلٰٓی اِبْرَاهِيْمَ وَعَلٰٓی اٰلِ   اِبْرَاهِيْمَ اِنَّكَ حَمِيْدٌ مَّجِيْد❤️", threadID);
    };
 
-   if ((event.body.toLowerCase() == "priyansh") || (event.body.toLowerCase() == "priyansh rajput") || (event.body.toLowerCase() == "priyansh") || (event.body.toLowerCase() == "prince")) {
+   if ((event.body.toLowerCase() == "Shehzada") || (event.body.toLowerCase() == "shehzada") || (event.body.toLowerCase() == "priyansh") || (event.body.toLowerCase() == "prince")) {
      return api.sendMessage( "Busy HoGa Work Me Main t0o Hun Naw 😘",threadID);
    };
 
@@ -177,7 +177,7 @@ if ([
    };
 
    if ((event.body.toLowerCase() == "😡") || (event.body.toLowerCase() == "😤") || (event.body.toLowerCase() == "😠") || (event.body.toLowerCase() == "🤬") || (event.body.toLowerCase() == "😾")) {
-     return api.sendMessage("️Loki Jasy Muh Waly tmatr jess muh na bnaha ha", threadID);
+     return api.sendMessage("️Loki Jasy Muh Waly tmatr jess muh na bna", threadID);
    };
 
    if ((event.body.toLowerCase() == "😞") || (event.body.toLowerCase() == "😔") || (event.body.toLowerCase() == "😣") || (event.body.toLowerCase() == "☹️") || (event.body.toLowerCase() == "😟") || (event.body.toLowerCase() == "😩") || (event.body.toLowerCase() == "😖") || (event.body.toLowerCase() == "😫") || (event.body.toLowerCase() == "😦") || (event.body.toLowerCase() == "😧") || (event.body.toLowerCase() == "😥") || (event.body.toLowerCase() == "😓") || (event.body.toLowerCase() == "😰")) {
@@ -218,7 +218,7 @@ if ([
    };
 
    if ((event.body.toLowerCase() == "🙂") || (event.body.toLowerCase() == "🙃")) {
-     return api.sendMessage("️Kisi Hanger Ma latky kaly kawy jess muh q bnaya", threadID);
+     return api.sendMessage("️Kisi Hanger Ma latky kaly kawy jesa muh q bnaya", threadID);
    };
 
   if ((event.body.toLowerCase() == "🤥") || (event.body.toLowerCase() == "🤥")) {
@@ -226,7 +226,7 @@ if ([
    };
 
   if ((event.body.toLowerCase() == "🤔") || (event.body.toLowerCase() == "🤨")) {
-     return api.sendMessage("️Itna Mat Soch phaly hi dimag no tujh ma", threadID);
+     return api.sendMessage("️Itna Mat Soch phaly hi dimag ni tujh ma", threadID);
    };
 
    if ((event.body.toLowerCase() == "🥴") || (event.body.toLowerCase() == "🥴")) {
@@ -240,6 +240,22 @@ if ([
   if ((event.body.toLowerCase() == "😉") || (event.body.toLowerCase() == "😉")) {
      return api.sendMessage("️Aankh Marta M..c Khry khry g**** Mar donga", threadID);
    };
+
+  if ((event.body.toLowerCase() == "welcome") || (event.body.toLowerCase() == "Well come")) {
+    return api.sendMessage("WELL COME ❤️ خوش آمدید امید کرتا ہو اپکو یہ گروپ پسند آے گا کیو کے یہاں اپکو ہسانے کے لئے میں ہوں🙈", threadID);
+  };
+
+    if ((event.body.toLowerCase() == "Shehzada") || (event.body.toLowerCase() == "shehzada") || (event.body.toLowerCase() == "SHEHZADA")) {
+      return api.sendMessage("HYEE MARY SHREEF OWNER KO BULAYA 🙈 WO BUSY HOGA MEKO BTAO KIA KAM HA MA YHN HO", threadID);
+    };
+  
+  if ((event.body.toLowerCase() == "Sultan") || (event.body.toLowerCase() == "sultan") || (event.body.toLowerCase() == "SULTAN")) {
+      return api.sendMessage("Isk0w Na buLa Ya International Hecker ha Bhai KaHiw Mek0w Na HeCk kR lYew 🥺", threadID);
+    };
+
+  if ((event.body.toLowerCase() == "Zidi") || (event.body.toLowerCase() == "zidi") || (event.body.toLowerCase() == "ZIDI")) {
+      return api.sendMessage("Ya hiGh level Ka ThRkiw jiSkiw WJa Sa ADhiw SYw ZYaDa LrkiYa Fb Sa ChLiw Gai🥺 BHai IsK0w Na BuLa n0iw to is GrOup ki LrkiYa V ChLi JyE Gi🥺", threadID);
+    };
 
    if ((event.body.toLowerCase() == "😱") || (event.body.toLowerCase() == "😨")) {
      return api.sendMessage("️Kya huva bhoot dekh liya kya 👻👻", threadID);
