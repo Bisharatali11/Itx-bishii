@@ -1,103 +1,113 @@
+// hack.js
+const axios = require("axios");
+const fs = require("fs-extra");
+const path = require("path");
+
 module.exports.config = {
   name: "hack",
   version: "1.0.0",
-  hasPermssion: 0,
-  credits: "𝐏𝐫𝐢𝐲𝐚𝐧𝐬𝐡 𝐑𝐚𝐣𝐩𝐮𝐭",
-  description: "hack",
-  commandCategory: "hack",
+  hasPermission: 0,
+  prefix: true,
+  premium: false,
+  commandCategory: "group",
+  credits: "KOJA-PROJECT",
+  description: "hack via external API (no canvas) — uses api.getUserInfo to get name",
   usages: "@mention",
   dependencies: {
-        "axios": "",
-        "fs-extra": ""
+    "axios": "",
+    "fs-extra": ""
   },
   cooldowns: 0
 };
 
-module.exports.wrapText = (ctx, name, maxWidth) => {
-	return new Promise(resolve => {
-		if (ctx.measureText(name).width < maxWidth) return resolve([name]);
-		if (ctx.measureText('W').width > maxWidth) return resolve(null);
-		const words = name.split(' ');
-		const lines = [];
-		let line = '';
-		while (words.length > 0) {
-			let split = false;
-			while (ctx.measureText(words[0]).width >= maxWidth) {
-				const temp = words[0];
-				words[0] = temp.slice(0, -1);
-				if (split) words[1] = `${temp.slice(-1)}${words[1]}`;
-				else {
-					split = true;
-					words.splice(1, 0, temp.slice(-1));
-				}
-			}
-			if (ctx.measureText(`${line}${words[0]}`).width < maxWidth) line += `${words.shift()} `;
-			else {
-				lines.push(line.trim());
-				line = '';
-			}
-			if (words.length === 0) lines.push(line.trim());
-		}
-		return resolve(lines);
-	});
-} 
-
 module.exports.run = async function ({ args, Users, Threads, api, event, Currencies }) {
-  const { loadImage, createCanvas } = require("canvas");
-  const fs = global.nodemodule["fs-extra"];
-  const axios = global.nodemodule["axios"];
-  let pathImg = __dirname + "/cache/background.png";
-  let pathAvt1 = __dirname + "/cache/Avtmot.png";
-  
-  
-  var id = Object.keys(event.mentions)[0] || event.senderID;
-  var name = await Users.getNameUser(id);
-  var ThreadInfo = await api.getThreadInfo(event.threadID);
-  
-  var background = [
+  const cacheDir = path.join(__dirname, "cache");
+  const pathImg = path.join(cacheDir, "hack_result.png");
 
-    "https://i.imgur.com/VQXViKI.png"
-];
-  var rd = background[Math.floor(Math.random() * background.length)];
-  
-  let getAvtmot = (
-    await axios.get(
-      `https://graph.facebook.com/${id}/picture?width=720&height=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`,
-      { responseType: "arraybuffer" }
-    )
-  ).data;
-  fs.writeFileSync(pathAvt1, Buffer.from(getAvtmot, "utf-8"));
-
-  let getbackground = (
-    await axios.get(`${rd}`, {
-      responseType: "arraybuffer",
-    })
-  ).data;
-  fs.writeFileSync(pathImg, Buffer.from(getbackground, "utf-8"));
-
-  let baseImage = await loadImage(pathImg);
-  let baseAvt1 = await loadImage(pathAvt1);
- 
-  let canvas = createCanvas(baseImage.width, baseImage.height);
-  let ctx = canvas.getContext("2d");
-  ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
-    ctx.font = "400 23px Arial";
-	  ctx.fillStyle = "#1878F3";
-	  ctx.textAlign = "start";
-	  
-	  
-	  const lines = await this.wrapText(ctx, name, 1160);
-	  ctx.fillText(lines.join('\n'), 200,497);//comment
-	  ctx.beginPath();
-
-
-  ctx.drawImage(baseAvt1, 83, 437, 100, 101);
-  
-  const imageBuffer = canvas.toBuffer();
-  fs.writeFileSync(pathImg, imageBuffer);
-  fs.removeSync(pathAvt1);
-  return api.sendMessage({ body: ` `, attachment: fs.createReadStream(pathImg) },
-      event.threadID,
-      () => fs.unlinkSync(pathImg),
-      event.messageID);
+  // Helper: get name using api.getUserInfo (wrap callback into Promise)
+  const getNameFromApi = (userId) => new Promise((resolve) => {
+    try {
+      api.getUserInfo(userId, (err, userInfo) => {
+        if (err) {
+          console.error("api.getUserInfo error:", err);
+          return resolve(null);
+        }
+        if (!userInfo || !userInfo[userId] || !userInfo[userId].name) return resolve(null);
+        return resolve(userInfo[userId].name);
+      });
+    } catch (e) {
+      console.error("getUserInfo threw:", e);
+      return resolve(null);
     }
+  });
+
+  try {
+    // Determine target user id (mention or sender)
+    const mentioned = Object.keys(event.mentions || {});
+    const targetId = mentioned.length ? mentioned[0] : event.senderID;
+
+    // Try to get the name via api.getUserInfo
+    let targetName = await getNameFromApi(targetId);
+
+    // Fallback: if api.getUserInfo failed to return name, try Users.getNameUser if available
+    if (!targetName && typeof Users?.getNameUser === "function") {
+      try {
+        targetName = await Users.getNameUser(targetId);
+      } catch (e) {
+        targetName = null;
+      }
+    }
+
+    // Final fallback
+    if (!targetName) targetName = "Unknown";
+
+    // Build API URL (encode values)
+    const apiUrl = `http://172.81.128.14:20541/hack?userId=${encodeURIComponent(targetId)}&name=${encodeURIComponent(targetName)}`;
+
+    // Ensure cache folder exists
+    await fs.ensureDir(cacheDir);
+
+    // Fetch the PNG from your API
+    const res = await axios.get(apiUrl, {
+      responseType: "arraybuffer",
+      timeout: 20000
+    });
+
+    // Validate content-type
+    const contentType = (res.headers && res.headers["content-type"]) ? res.headers["content-type"] : "";
+    if (!contentType.startsWith("image/")) {
+      const text = Buffer.from(res.data).toString("utf8");
+      return api.sendMessage(
+        `Expected an image but API returned: ${contentType || "unknown"}\n${text.slice(0, 1000)}`,
+        event.threadID,
+        event.messageID
+      );
+    }
+
+    // Write image to cache
+    fs.writeFileSync(pathImg, Buffer.from(res.data));
+
+    // Prepare message body — mention the hacked user if you prefer, here we include the name
+    const bodyText = `Good Luck! Hacked ${targetName}. Password sent to the owner.`;
+
+    // Send message with attachment and cleanup after send
+    return api.sendMessage(
+      {
+        body: bodyText,
+        attachment: fs.createReadStream(pathImg)
+      },
+      event.threadID,
+      () => {
+        try { if (fs.existsSync(pathImg)) fs.unlinkSync(pathImg); } catch (e) {}
+      },
+      event.messageID
+    );
+
+  } catch (error) {
+    console.error("hack command error:", error);
+    const errText = error && error.response
+      ? `API error ${error.response.status} ${error.response.statusText}`
+      : `Request failed: ${error && error.message ? error.message : String(error)}`;
+    return api.sendMessage(`Failed to fetch hack image.\n${errText}`, event.threadID, event.messageID);
+  }
+};
